@@ -9,16 +9,19 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { troChoi } from "@/dto/objects";
+interface productProps {
+  title: string;
+  link: string;
+  thumbnail: string;
+}
 
-export const HeroParallax = ({
-  products,
-}: {
-  products: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  }[];
-}) => {
+export const HeroParallax = ({ items }: { items: troChoi[] }) => {
+  const products: productProps[] = items.map((item) => ({
+    title: item.title,
+    link: item.link,
+    thumbnail: item.image,
+  }));
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
@@ -57,7 +60,9 @@ export const HeroParallax = ({
   return (
     <div
       ref={ref}
-      className="h-[300vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[300vh] py-40 overflow-hidden 
+      antialiased relative flex flex-col self-auto 
+      [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -69,7 +74,10 @@ export const HeroParallax = ({
         }}
         className=""
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
+        <motion.div
+          className="flex flex-row-reverse 
+        space-x-reverse space-x-20 mb-20"
+        >
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -78,7 +86,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row  mb-20 space-x-20 ">
+        <motion.div className="flex flex-row mb-20 space-x-20 ">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -87,7 +95,10 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
+        <motion.div
+          className="flex flex-row-reverse 
+        space-x-reverse space-x-20"
+        >
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
@@ -103,19 +114,26 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-      <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
+    <div
+      className="max-w-7xl relative block justify-center items-center 
+      md: flex-col mx-auto md:py-40 sm:py-20 py-0 text-base px-2 w-full
+     left-0 top-0"
+    >
+      <h1 className="md:text-7xl text-4xl text-center md:text-left font-bold dark:text-white">
         The Ultimate <br /> Game Storage
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-        Looking for a one-stop destination for the latest and greatest game
-        deals? Our game sale website brings together an extensive collection of
-        popular titles across every genre, from blockbuster AAA releases to
-        hidden indie gems. Our platform is updated daily, ensuring you get the
-        best prices from trusted sources, complete with detailed reviews,
-        ratings, and recommendations to help you choose the perfect game.
-        Discover a new adventure today and save big on your next favorite game!
-      </p>
+      <div className="w-full flex justify-center items-center md:block mt-8">
+        <p className=" max-w-[19rem] sm:max-w-xl md:max-w-2xl sm:text-xl text-sm  dark:text-neutral-200">
+          Looking for a one-stop destination for the latest and greatest game
+          deals? Our game sale website brings together an extensive collection
+          of popular titles across every genre, from blockbuster AAA releases to
+          hidden indie gems. Our platform is updated daily, ensuring you get the
+          best prices from trusted sources, complete with detailed reviews,
+          ratings, and recommendations to help you choose the perfect game.
+          Discover a new adventure today and save big on your next favorite
+          game!
+        </p>
+      </div>
     </div>
   );
 };
@@ -124,11 +142,7 @@ export const ProductCard = ({
   product,
   translate,
 }: {
-  product: {
-    title: string;
-    link: string;
-    thumbnail: string;
-  };
+  product: productProps;
   translate: MotionValue<number>;
 }) => {
   return (
@@ -140,7 +154,8 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-[30rem] relative flex-shrink-0"
+      className="group/product h-[20rem] w-[20rem] sm:h-[30rem] 
+      sm:w-[30rem] relative flex-shrink-0 "
     >
       <Link
         href={product.link}

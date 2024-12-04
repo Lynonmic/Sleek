@@ -18,11 +18,13 @@ export const MenuItem = ({
   active,
   item,
   children,
+  linkhref,
 }: {
   setActive: (item: string) => void;
   active: string | null;
   item: string;
   children?: React.ReactNode;
+  linkhref: string;
 }) => {
   return (
     <div onMouseEnter={() => setActive(item)} className="relative ">
@@ -30,7 +32,7 @@ export const MenuItem = ({
         transition={{ duration: 0.3 }}
         className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white "
       >
-        {item}
+        <HoveredLink href={linkhref || "#"}>{item}</HoveredLink>
       </motion.p>
       {active !== null && (
         <motion.div
@@ -39,11 +41,11 @@ export const MenuItem = ({
           transition={transition}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="relative md:absolute md:top-[calc(100%_+_1.2rem)] md:left-1/2 md:transform md:-translate-x-1/2 md:pt-4">
               <motion.div
                 transition={transition}
                 layoutId="active" // layoutId ensures smooth animation
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
+                className="bg-transparent md:dark:bg-black backdrop-blur-sm md:rounded-2xl overflow-hidden md:border md:border-black/[0.2] md:dark:border-white/[0.2] md:shadow-xl"
               >
                 <motion.div
                   layout // layout ensures smooth animation
@@ -70,9 +72,9 @@ export const Menu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="relative rounded-full border border-transparent
-       bg-gradient-to-br from-black to-primary-200 shadow-input
-      flex justify-center items-center space-x-4 px-8 py-6 "
+      className="relative md:max-w-full md:w-full md:mt-0 border border-transparent bg-transparent
+       md:bg-gradient-to-br from-black to-primary-200 md:shadow-input
+      flex flex-col items-start gap-5 mt-5 md:flex-row md:justify-between md:items-center md:space-x-4 md:px-8 md:py-6 "
     >
       {children}
     </nav>
@@ -115,7 +117,7 @@ export const HoveredLink = ({ children, ...rest }: any) => {
   return (
     <Link
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:var(darkGreen) "
+      className="text-neutral-700 dark:text-neutral-200 hover:text-primary-300"
     >
       {children}
     </Link>
