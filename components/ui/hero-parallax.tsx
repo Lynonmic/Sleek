@@ -119,11 +119,11 @@ export const Header = () => {
       md: flex-col mx-auto md:py-40 sm:py-20 py-0 text-base px-2 w-full
      left-0 top-0"
     >
-      <h1 className="md:text-7xl text-4xl text-center md:text-left font-bold dark:text-white">
+      <h1 className="md:text-7xl text-4xl text-center md:text-left font-bold text-white">
         The Ultimate <br /> Game Storage
       </h1>
       <div className="w-full flex justify-center items-center md:block mt-8">
-        <p className=" max-w-[19rem] sm:max-w-xl md:max-w-2xl sm:text-xl text-sm  dark:text-neutral-200">
+        <p className=" max-w-[19rem] sm:max-w-xl md:max-w-2xl sm:text-xl text-sm text-white">
           Looking for a one-stop destination for the latest and greatest game
           deals? Our game sale website brings together an extensive collection
           of popular titles across every genre, from blockbuster AAA releases to

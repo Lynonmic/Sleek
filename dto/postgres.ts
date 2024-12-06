@@ -1,44 +1,8 @@
-// //import { troChoi } from "@/dto/trochoi";
-// import { Client, Pool } from "pg";
-// const client = new Client({
-//      host: "localhost",
-//   port: 2381,
-//   user: "postgres",
-//   password: "aceproit",
-//   database: "QuanLyBanGame",
-//   });
+
 
 import { troChoi } from "@/dto/objects";
 import {Pool} from "pg";
 
-
-// export async function getAllData() {
-//   try {
-//     // Connect to the PostgreSQL database
-//     await client.connect();
-//     // Run a query to fetch products
-//     const result = await client.query('SELECT * FROM trochoi');
-//     const data: troChoi[] = result.rows.map((row) => ({
-//       id: row.idtc,
-//       title: row.tieude,
-//       idtl: row.idtl,
-//       author: row.nhaphathanh,
-//       cost: row.giabam,
-//       description: row.mota,
-//       storedNumber: row.slkho, // Ensure column names match database
-//       image: row.hinhanh,
-//       link: row.duongdan,
-//     }));
-//     console.log(data);
-//     return data;
-    
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//   } finally {
-//     // Always close the database connection
-//     await client.end();
-//   }
-// }
 const pool = new Pool({
      host: "localhost",
   port: 2381,
@@ -67,6 +31,14 @@ export async function getAllData({ tableName }: { tableName: string }) {
     }));
   return data;
 }
+
+export async function productTroChoi() {
+  const tableName = "trochoi";
+  const products = await getAllData({ tableName });
+  
+  return products;
+}
+
 export async function insertData(
   table:string,
   idnd: string,

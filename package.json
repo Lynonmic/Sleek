@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/table": "^2.0.40",
+    "@nextui-org/use-infinite-scroll": "^2.1.5",
     "@radix-ui/react-label": "^2.1.0",
+    "@react-stately/data": "^3.12.0",
     "@react-three/fiber": "^8.17.10",
     "@tabler/icons-react": "^3.24.0",
     "@tsparticles/engine": "^3.5.0",
@@ -17,14 +21,17 @@
     "@tsparticles/slim": "^3.5.0",
     "@types/tailwindcss": "^3.0.11",
     "@types/three": "^0.169.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.13.1",
+    "lucide-react": "^0.465.0",
     "next": "^15.0.2",
     "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-element-to-jsx-string": "^15.0.0",
     "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7",
     "three": "^0.170.0"
   },
   "devDependencies": {

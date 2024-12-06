@@ -4,7 +4,7 @@ import Footer from "./footer";
 //import { HeroParallax } from "./ui/hero-parallax";
 import { Spotlight } from "./ui/Sportlight";
 
-const Hero = ({
+export const Hero = ({
   className,
   children,
 }: {
@@ -25,5 +25,3 @@ const Hero = ({
     </div>
   );
 };
-
-export default Hero;

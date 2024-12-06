@@ -10,22 +10,27 @@ import {
 } from "@tabler/icons-react";
 import { HoveredLink } from "./navbar-menu";
 
-export function SignupForm() {
+export function SignupForm({ className }: { className: string }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
   };
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+    <div
+      className={cn(
+        "max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black dark:bg-black",
+        className
+      )}
+    >
+      <h2 className="font-bold text-xl text-neutral-200 dark:text-neutral-200">
         Sign Up
       </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
+      <p className=" text-sm max-w-sm mt-2 text-neutral-200 dark:text-neutral-300">
         Login to sleek if you can because we don&apos;t have a login flow yet
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        <LabelInputContainer className="mb-4">
+        <LabelInputContainer className="mb-4 ">
           <Label htmlFor="username">UserName</Label>
           <Input id="username" placeholder="...." type="text" />
         </LabelInputContainer>
@@ -42,7 +47,7 @@ export function SignupForm() {
           <BottomGradient />
         </button>
         <div className="relative ml-12 mt-4">
-          <HoveredLink href="/">
+          <HoveredLink href="/sign-up">
             <u>You don&apos;t have account. Sign Up now! </u>
           </HoveredLink>
         </div>
@@ -103,7 +108,7 @@ const LabelInputContainer = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
+    <div className={cn("flex flex-col space-y-2 w-full ", className)}>
       {children}
     </div>
   );

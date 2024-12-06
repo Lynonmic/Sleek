@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-async-client-component */
-import Hero from "@/components/Hero";
+import { Hero } from "@/components/Hero";
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import { MobileMenu } from "@/components/ui/mobile-menu";
 import NavbarMenu from "@/components/Navbar";
-import { getAllData } from "@/lib/postgres";
+import { productTroChoi } from "@/dto/postgres";
 
 export default async function Home() {
-  const tableName = "trochoi";
-  const products = await getAllData({ tableName });
+  const products = await productTroChoi();
 
   return (
     <>
