@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer = ({ className }: { className: string }) => {
   return (
-    <div className={cn("relative grid grid-cols-3 p-10", className)}>
+    <div className={cn("relative grid grid-cols-3 p-10 text-white", className)}>
       <div>
         <ul className="flex flex-col md:flex-row flex-1 justify-between">
           <li>

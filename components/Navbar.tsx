@@ -23,9 +23,8 @@ const NavbarMenu = ({ className }: { className?: string }) => {
             alt="Logo"
             className="object-cover !m-0 !p-0 object-top rounded-full h-14 w-14 border-2 group-hover:scale-105 group-hover:z-30 border-white  relative transition duration-500"
           />
-          <h1 className="text-[36px] text-primary-300 pr-6">Sleek</h1>
         </div>
-        <div className="flex justify-center gap-5 text-xl">
+        <div className="flex justify-center gap-5 text-xl text-white">
           <MenuItem
             setActive={setActive}
             active={active}

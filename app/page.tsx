@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-async-client-component */
 "use client";
-import Hero from "@/components/Hero";
+import { Hero } from "@/components/Hero";
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import { MobileMenu } from "@/components/ui/mobile-menu";
 import NavbarMenu from "@/components/Navbar";
