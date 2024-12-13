@@ -9,18 +9,17 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { troChoi } from "@/dto/objects";
 interface productProps {
   title: string;
   link: string;
   thumbnail: string;
 }
 
-export const HeroParallax = ({ items }: { items: troChoi[] }) => {
+export const HeroParallax = ({ items }: { items: any[] }) => {
   const products: productProps[] = items.map((item) => ({
-    title: item.title,
-    link: item.link,
-    thumbnail: item.image,
+    title: item.tieude,
+    link: item.duongdan,
+    thumbnail: item.hinhanh,
   }));
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
@@ -158,7 +157,7 @@ export const ProductCard = ({
       sm:w-[30rem] relative flex-shrink-0 "
     >
       <Link
-        href={product.link}
+        href={product.link ?? "/"}
         className="block group-hover/product:shadow-2xl "
       >
         <Image

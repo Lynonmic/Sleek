@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalTrigger,
 } from "./animated-modal";
-import { SignupForm } from "./sign-up-form";
+import { SignupForm } from "../../app/sign-in/ui/sign-up-form";
 import Image from "next/image";
 
 export default function AnimatedButton({ children }: { children: string }) {
