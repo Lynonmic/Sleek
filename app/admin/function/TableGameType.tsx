@@ -1,21 +1,21 @@
-/* eslint-disable @next/next/no-async-client-component */
-"use client";
-import { Hero } from "@/components/Hero";
-import { HeroParallax } from "@/components/ui/hero-parallax";
-import { MobileMenu } from "@/components/ui/mobile-menu";
-import NavbarMenu from "@/components/Navbar";
-import { troChoi } from "@/backend/dto/objects";
 import { useEffect, useState } from "react";
+import { DataTable } from "./DataTable";
 
-export default function Home() {
-  const [products, setProducts] = useState<troChoi[]>([]);
+export function TableType() {
+  interface gameType {
+    id: string;
+    name: string;
+    des: string;
+  }
+
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:8000/trochoi", {
+        const res = await fetch("http://localhost:8000/theloaitrochoi", {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -36,20 +36,28 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  const types: gameType[] = products.map((product) => ({
+    id: product.idtl,
+    name: product.tentheloai,
+    des: product.motatl,
+  }));
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const columnsData = [
+    { title: "ID", value: "id" },
+    { title: "Name", value: "name" },
+    { title: "Description", value: "des" },
+  ];
+
   return (
-    <>
-      <NavbarMenu className="absolute top-0 mx-auto hidden md:block" />
-      <MobileMenu>
-        <Hero>
-          <HeroParallax items={products} />
-        </Hero>
-      </MobileMenu>
-      <Hero className="hidden md:block">
-        <HeroParallax items={products} />
-      </Hero>
-    </>
+    <DataTable
+      data={types}
+      columnsData={columnsData}
+      tableName="theloaitrochoi"
+      idField="idtl"
+      filterField="name"
+    />
   );
 }

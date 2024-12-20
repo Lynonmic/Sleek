@@ -6,7 +6,7 @@ export function TopElement({ className }: { className: string }) {
   return (
     <>
       <div className={cn("flex justify-end", className)}>
-        <AnimatedButton buttonName="Adding">
+        <AnimatedButton buttonName="Create">
           <AddingForm className="" />
         </AnimatedButton>
       </div>

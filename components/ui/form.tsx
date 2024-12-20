@@ -1,21 +1,85 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "./label";
-import { Input } from "./input";
+import { Input } from "./input-form";
 import { cn } from "@/lib/utils";
-import {
-  IconBrandGithub,
-  IconBrandGoogle,
-  IconBrandOnlyfans,
-} from "@tabler/icons-react";
-import { HoveredLink } from "./navbar-menu";
-import { ComboboxPopover } from "../../app/admin/ui/combobox";
+import { ComboboxPopover } from "@/components/ui/combobox";
 
-export function AddingForm({ className }: { className: string }) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
+export function AddingForm({
+  className,
+  onUserAdded,
+}: {
+  className: string;
+  onUserAdded?: () => void; // Add callback prop
+}) {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
+    role: "khachhang",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
   };
+
+  const handleRoleChange = (value: string) => {
+    setFormData({
+      ...formData,
+      role: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords don't match!");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/nguoidung", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to add user");
+
+      const data = await res.json();
+      console.log("User added:", data);
+
+      setFormData({
+        username: "",
+        password: "",
+        confirmPassword: "",
+        email: "",
+        role: "khachhang",
+      });
+
+      if (onUserAdded) {
+        onUserAdded();
+      }
+
+      alert("User added successfully!");
+    } catch (err) {
+      console.error("Error adding user:", err);
+      alert("Failed to add user!");
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -27,22 +91,54 @@ export function AddingForm({ className }: { className: string }) {
         Adding user
       </h2>
 
-      <form className="my-8" onSubmit={handleSubmit} method="post">
-        <LabelInputContainer className="mb-4 ">
+      <form className="my-8" onSubmit={handleSubmit}>
+        <LabelInputContainer className="mb-4">
           <Label htmlFor="username">UserName</Label>
-          <Input id="username" placeholder="...." type="text" />
+          <Input
+            id="username"
+            placeholder="...."
+            type="text"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input
+            id="password"
+            placeholder="••••••••"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Password</Label>
-          <Input id="email" placeholder="" type="email" />
+          <Label htmlFor="password-confirm">Password confirm</Label>
+          <Input
+            id="confirmPassword"
+            placeholder="••••••••"
+            type="password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
         </LabelInputContainer>
-        <LabelInputContainer className="max-w-20  mb-4">
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            placeholder=""
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </LabelInputContainer>
+        <LabelInputContainer className="max-w-20 mb-4">
           <Label htmlFor="Role">Role</Label>
-          <ComboboxPopover />
+          <ComboboxPopover onChange={handleRoleChange} value={formData.role} />
         </LabelInputContainer>
 
         <button
@@ -52,87 +148,6 @@ export function AddingForm({ className }: { className: string }) {
           Add &rarr;
           <BottomGradient />
         </button>
-      </form>
-    </div>
-  );
-}
-
-export function UpdateForm({ className }: { className: string }) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
-  return (
-    <div
-      className={cn(
-        "max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black dark:bg-black",
-        className
-      )}
-    >
-      <h2 className="font-bold text-xl text-neutral-200 dark:text-neutral-200">
-        Sign Up
-      </h2>
-      <p className=" text-sm max-w-sm mt-2 text-neutral-200 dark:text-neutral-300">
-        Login to sleek if you can because we don&apos;t have a login flow yet
-      </p>
-
-      <form className="my-8" onSubmit={handleSubmit}>
-        <LabelInputContainer className="mb-4 ">
-          <Label htmlFor="username">UserName</Label>
-          <Input id="username" placeholder="...." type="text" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-
-        <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-        >
-          Sign In &rarr;
-          <BottomGradient />
-        </button>
-        <div className="relative ml-12 mt-4">
-          <HoveredLink href="/sign-up">
-            <u>You don&apos;t have account. Sign Up now! </u>
-          </HoveredLink>
-        </div>
-
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
-
-        <div className="flex flex-col space-y-4">
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              GitHub
-            </span>
-            <BottomGradient />
-          </button>
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              Google
-            </span>
-            <BottomGradient />
-          </button>
-          <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
-          >
-            <IconBrandOnlyfans className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-              Gmail
-            </span>
-            <BottomGradient />
-          </button>
-        </div>
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Sidebar, SidebarBody, SidebarLink } from "./sidebar";
+import { Sidebar, SidebarBody, SidebarLink } from "./sidebar-mobile";
 
 import Link from "next/link";
 import { motion } from "framer-motion";

@@ -1,10 +1,10 @@
 import React from "react";
-import { SignupForm } from "./ui/sign-up-form";
+import { SignupForm } from "../../components/ui/sign-up-form";
 
 const page = () => {
   return (
     <div>
-      <SignupForm />
+      <SignupForm className="" />
     </div>
   );
 };

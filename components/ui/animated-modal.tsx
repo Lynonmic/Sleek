@@ -168,7 +168,7 @@ export const ModalFooter = ({
   return (
     <div
       className={cn(
-        "flex justify-end p-4 bg-gray-100 dark:bg-neutral-900",
+        "flex justify-end p-4 bg-gray-100 dark:bg-neutral-200",
         className
       )}
     >
@@ -213,7 +213,7 @@ const CloseIcon = ({ className }: { className: string }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="text-black dark:text-white h-4 w-4 group-hover:scale-125 group-hover:rotate-3 transition duration-200"
+        className="text-white dark:text-black h-4 w-4 group-hover:scale-125 group-hover:rotate-3 transition duration-200"
       >
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
         <path d="M18 6l-12 12" />

@@ -1,13 +1,5 @@
-import { Dashboard } from "@/components/ui/dashboard";
-import { TableUser } from "@/components/ui/TableUser";
-import React from "react";
+import { DashBoard } from "@/components/ui/app-sidebar";
 
-export default function SignUp() {
-  return (
-    <div>
-      <Dashboard>
-        <TableUser />
-      </Dashboard>
-    </div>
-  );
+export default function AdminPage() {
+  return <DashBoard />;
 }

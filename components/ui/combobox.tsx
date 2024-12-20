@@ -4,19 +4,19 @@ import * as React from "react";
 import { ArrowUpCircle, Circle, HelpCircle, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/app/admin/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "@/app/admin/ui/command";
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/app/admin/ui/popover";
+} from "@/components/ui/popover";
 
 type Status = {
   value: string;
@@ -24,28 +24,33 @@ type Status = {
   icon: LucideIcon;
 };
 
-const statuses: Status[] = [
+export const statuses: Status[] = [
   {
-    value: "customer",
+    value: "khachhang",
     label: "Customer",
     icon: HelpCircle,
   },
   {
-    value: "manager",
+    value: "quanly",
     label: "Manager",
     icon: Circle,
   },
   {
-    value: "employee",
-    label: "Employee",
+    value: "admin",
+    label: "Admin",
     icon: ArrowUpCircle,
   },
 ];
 
-export function ComboboxPopover() {
+interface ComboboxPopoverProps {
+  onChange: (value: string) => void;
+  value: string;
+}
+
+export function ComboboxPopover({ onChange, value }: ComboboxPopoverProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-    null
+    statuses.find((status) => status.value === value) || null
   );
 
   return (
@@ -77,11 +82,11 @@ export function ComboboxPopover() {
                   <CommandItem
                     key={status.value}
                     value={status.value}
-                    onSelect={(value) => {
-                      setSelectedStatus(
-                        statuses.find((priority) => priority.value === value) ||
-                          null
-                      );
+                    onSelect={(value: string) => {
+                      const selected =
+                        statuses.find((s) => s.value === value) || null;
+                      setSelectedStatus(selected);
+                      onChange(value);
                       setOpen(false);
                     }}
                   >

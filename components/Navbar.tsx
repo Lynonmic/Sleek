@@ -4,9 +4,12 @@ import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import AnimatedButton from "./ui/animated-button";
+import { SignupForm } from "./ui/sign-up-form";
 
 const NavbarMenu = ({ className }: { className?: string }) => {
   const [active, setActive] = useState<string | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
   return (
     <div
       className={cn(
@@ -42,7 +45,15 @@ const NavbarMenu = ({ className }: { className?: string }) => {
           <HoveredLink href="#">FAQ</HoveredLink>
           <HoveredLink href="#">Helps</HoveredLink>
         </div>
-        <AnimatedButton>Login</AnimatedButton>
+        {loggedInUser ? (
+          <div className="flex justify-center gap-5 text-xl text-white">
+            <HoveredLink href="/profile">{loggedInUser}</HoveredLink>
+          </div>
+        ) : (
+          <AnimatedButton buttonName="Login">
+            <SignupForm className={""} setLoggedInUser={setLoggedInUser} />
+          </AnimatedButton>
+        )}
       </Menu>
     </div>
   );
