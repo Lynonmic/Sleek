@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "./DataTable";
+import { userUpdateFormConfig } from "./formConfigs";
 
 export function TableUser() {
   interface User {
@@ -52,6 +53,31 @@ export function TableUser() {
     },
   ];
 
+  const userFormConfig = {
+    title: "Add User",
+    endpoint: "http://localhost:8000/nguoidung",
+    fields: [
+      { id: "username", label: "Username", type: "text", required: true },
+      { id: "password", label: "Password", type: "password", required: true },
+      {
+        id: "confirmPassword",
+        label: "Confirm Password",
+        type: "password",
+        required: true,
+      },
+      { id: "email", label: "Email", type: "email", required: true },
+      {
+        id: "role",
+        label: "Role",
+        type: "combobox",
+        options: [
+          { label: "Customer", value: "khachhang" },
+          { label: "Manager", value: "quanly" },
+          { label: "Admin", value: "admin" },
+        ],
+      },
+    ],
+  };
   return (
     <DataTable
       data={users}
@@ -59,6 +85,7 @@ export function TableUser() {
       tableName={"nguoidung"}
       idField="idnd"
       filterField="email"
+      configForm={userFormConfig}
     />
   );
 }

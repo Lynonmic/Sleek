@@ -36,21 +36,21 @@ const NavbarMenu = ({ className }: { className?: string }) => {
           >
             <div className="flex flex-col space-y-4 text-sm">
               <HoveredLink href="/store">Hot</HoveredLink>
-              <HoveredLink href="/">Adventure</HoveredLink>
-              <HoveredLink href="/">Inteligence</HoveredLink>
-              <HoveredLink href="/">Stirmulation</HoveredLink>
+              <HoveredLink href="/store">Adventure</HoveredLink>
+              <HoveredLink href="/store">Inteligence</HoveredLink>
+              <HoveredLink href="/store">Stirmulation</HoveredLink>
             </div>
           </MenuItem>
           <HoveredLink href="/news">News</HoveredLink>
-          <HoveredLink href="#">FAQ</HoveredLink>
-          <HoveredLink href="#">Helps</HoveredLink>
+          <HoveredLink href="/faq">FAQ</HoveredLink>
+          <HoveredLink href="/faq">Helps</HoveredLink>
         </div>
         {loggedInUser ? (
           <div className="flex justify-center gap-5 text-xl text-white">
-            <HoveredLink href="/profile">{loggedInUser}</HoveredLink>
+            <HoveredLink href="/app">{loggedInUser}</HoveredLink>
           </div>
         ) : (
-          <AnimatedButton buttonName="Login">
+          <AnimatedButton buttonName="Login" AcceptButton="Sign In">
             <SignupForm className={""} setLoggedInUser={setLoggedInUser} />
           </AnimatedButton>
         )}

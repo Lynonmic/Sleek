@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { ArrowUpCircle, Circle, HelpCircle, LucideIcon } from "lucide-react";
+import {
+  ArrowUpCircle,
+  Circle,
+  HelpCircle,
+  LucideIcon,
+  ChevronsUpDown,
+  Check,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,7 +24,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 type Status = {
   value: string;
   label: string;
@@ -47,21 +53,25 @@ interface ComboboxPopoverProps {
   value: string;
 }
 
-export function ComboboxPopover({ onChange, value }: ComboboxPopoverProps) {
+export function ComboboxPopover({
+  onChange,
+  value,
+  options,
+}: ComboboxPopoverProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     statuses.find((status) => status.value === value) || null
   );
 
   return (
-    <div className="flex items-center space-x-4">
-      <p className="text-sm text-muted-foreground">Status</p>
+    <div className="w-full" onClick={(e) => e.stopPropagation()}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            size="sm"
-            className="w-[150px] justify-start"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
           >
             {selectedStatus ? (
               <>
@@ -71,9 +81,10 @@ export function ComboboxPopover({ onChange, value }: ComboboxPopoverProps) {
             ) : (
               <>+ Set status</>
             )}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0" side="right" align="start">
+        <PopoverContent className="w-[200px] p-0" align="start">
           <Command>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>

@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   ColumnDef,
@@ -35,12 +34,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalTrigger,
-} from "@/components/ui/animated-modal";
+import { Modal, ModalBody, ModalContent } from "@/components/ui/animated-modal";
+import AnimatedButton from "@/components/ui/animated-button";
+import { AddingForm, FormConfig, UpdateForm } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 
 type DataType = {
   title: string;
@@ -57,13 +54,14 @@ const createColumns = <T,>(data: DataType[]): ColumnDef<T>[] => {
   }));
 };
 
-export function DataTable<T>({
+export function DataTable<T extends object>({
   data,
   columnsData,
   tableName,
   idField = "id",
-  filterField = "email", // Add default filter field
+  filterField = "id",
   apiEndpoint = "http://localhost:8000",
+  configForm,
 }: {
   data: T[];
   columnsData: DataType[];
@@ -71,60 +69,82 @@ export function DataTable<T>({
   idField?: string;
   filterField?: string;
   apiEndpoint?: string;
+  configForm?: FormConfig;
 }) {
   const [tableData, setTableData] = React.useState<T[]>(data);
-  const [editingRow, setEditingRow] = React.useState<T | null>(null);
-  const [, setIsModalOpen] = React.useState(false);
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     setTableData(data);
   }, [data]);
 
-  const handleEdit = (row: T) => {
-    setEditingRow(row);
+  const refreshData = async () => {
+    try {
+      const response = await fetch(`${apiEndpoint}/${tableName}`);
+      if (!response.ok) throw new Error("Failed to fetch data");
+      const result = await response.json();
+      const dataArray = Array.isArray(result) ? result : result.data;
+
+      if (!Array.isArray(dataArray)) {
+        console.error("Invalid response format");
+        return;
+      }
+
+      setTableData(dataArray);
+    } catch (err) {
+      console.error("Error refreshing data:", err);
+    }
+  };
+
+  const handleEdit = async (row: T) => {
+    const id = (row as any)[idField];
+    setSelectedId(id);
     setIsModalOpen(true);
   };
 
   const handleDelete = async (row: T) => {
+    if (!(idField in row)) {
+      console.error(`Row is missing required id field: ${idField}`);
+      return;
+    }
+
     const id = (row as any)[idField];
     try {
       const res = await fetch(`${apiEndpoint}/${tableName}/${id}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Failed to delete");
-      setTableData((prevData) =>
-        prevData.filter((item) => (item as any)[idField] !== id)
+      if (!res.ok) throw new Error(`Failed to delete item with id: ${id}`);
+
+      setTableData((current) =>
+        current.filter((item) => (item as any)[idField] !== id)
       );
     } catch (err) {
       console.error("Error deleting row:", err);
+      alert("Failed to delete item");
     }
   };
 
-  const handleUpdate = async (editedData: T) => {
+  const handleAdd = async (newData: T) => {
     try {
-      const res = await fetch(
-        `${apiEndpoint}/${tableName}/${(editedData as any)[idField]}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedData),
-        }
-      );
-      if (!res.ok) throw new Error("Failed to update");
+      const res = await fetch(`${apiEndpoint}/${tableName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+      });
 
-      // Update table data without page reload
-      setTableData((prevData) =>
-        prevData.map((item) =>
-          (item as any)[idField] === (editedData as any)[idField]
-            ? editedData
-            : item
-        )
-      );
-      setIsModalOpen(false);
+      if (!res.ok) {
+        throw new Error("Failed to add item");
+      }
+
+      const addedData = await res.json();
+
+      setTableData((current) => [...current, addedData.data]);
     } catch (err) {
-      console.error("Error updating row:", err);
+      console.error("Error adding row:", err);
+      alert("Failed to add item");
     }
   };
 
@@ -159,31 +179,33 @@ export function DataTable<T>({
         const item = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(JSON.stringify(item))
-                }
-              >
-                Copy Data
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleEdit(item)}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(item)}>
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigator.clipboard.writeText(JSON.stringify(item))
+                  }
+                >
+                  Copy Data
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => handleEdit(item)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => handleDelete(item)}>
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         );
       },
     },
@@ -198,7 +220,7 @@ export function DataTable<T>({
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: tableData, // Use tableData instead of data
+    data: tableData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -218,6 +240,14 @@ export function DataTable<T>({
 
   return (
     <div className="w-full">
+      <div className={cn("flex justify-end gap-2")}>
+        <Button variant="outline" size="lg" onClick={refreshData}>
+          Refresh
+        </Button>
+        <AnimatedButton buttonName="Create" AcceptButton="">
+          <AddingForm className="" config={configForm} onAdded={handleAdd} />
+        </AnimatedButton>
+      </div>
       <div className="flex items-center py-4">
         <Input
           placeholder={`Filter ${filterField}...`}
@@ -330,51 +360,28 @@ export function DataTable<T>({
           </Button>
         </div>
       </div>
-      <Modal>
-        <ModalTrigger className="hidden">Open Modal</ModalTrigger>
-        <ModalBody>
-          <ModalContent>
-            <h2 className="text-xl font-bold">Edit Row</h2>
-            {editingRow && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleUpdate(editingRow);
-                }}
-              >
-                {Object.keys(editingRow).map((key) => (
-                  <div key={key} className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      {key}
-                    </label>
-                    <input
-                      type="text"
-                      value={(editingRow as any)[key]}
-                      onChange={(e) =>
-                        setEditingRow({
-                          ...editingRow,
-                          [key]: e.target.value,
-                        })
-                      }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                ))}
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="default">
-                    Save
-                  </Button>
-                </div>
-              </form>
-            )}
-          </ModalContent>
-        </ModalBody>
+      <Modal
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          setIsModalOpen(open);
+          if (!open) setSelectedId(null);
+        }}
+      >
+        <ModalContent className="bg-black dark:bg-neutral-900">
+          <ModalBody>
+            <div className="max-h-[80vh] w-full overflow-y-auto p-6">
+              {selectedId && (
+                <UpdateForm
+                  config={configForm}
+                  id={selectedId}
+                  tableName={tableName}
+                  apiEndpoint={apiEndpoint}
+                  onSubmit={refreshData}
+                />
+              )}
+            </div>
+          </ModalBody>
+        </ModalContent>
       </Modal>
     </div>
   );

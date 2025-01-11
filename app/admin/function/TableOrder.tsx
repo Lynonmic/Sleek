@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "./DataTable";
+import { orderFormConfig } from "./formConfigs";
 
 export function TableOrder() {
   interface Order {
@@ -62,6 +63,7 @@ export function TableOrder() {
       tableName="donhang"
       idField="iddh"
       filterField="User_ID"
+      configForm={orderFormConfig}
     />
   );
 }

@@ -36,8 +36,33 @@ export const useModal = () => {
   return context;
 };
 
-export function Modal({ children }: { children: ReactNode }) {
-  return <ModalProvider>{children}</ModalProvider>;
+interface ModalProps {
+  children: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function Modal({ children, open, onOpenChange }: ModalProps) {
+  const [internalOpen, setInternalOpen] = useState(open ?? false);
+
+  useEffect(() => {
+    if (open !== undefined) {
+      setInternalOpen(open);
+    }
+  }, [open]);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setInternalOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
+
+  return (
+    <ModalContext.Provider
+      value={{ open: internalOpen, setOpen: handleOpenChange }}
+    >
+      {children}
+    </ModalContext.Provider>
+  );
 }
 
 export const ModalTrigger = ({

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "./DataTable";
+import { orderDetailFormConfig } from "./formConfigs";
 
 interface OrderDetail {
   id: string;
@@ -39,7 +40,6 @@ export function TableOrderDetail() {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        // Fetch all required data in parallel
         const [orderDetailsRes, ordersRes, usersRes, gamesRes] =
           await Promise.all([
             fetch("http://localhost:8000/chitietdonhang"),
@@ -53,7 +53,6 @@ export function TableOrderDetail() {
         const usersData = await usersRes.json();
         const gamesData = await gamesRes.json();
 
-        // Create lookup maps for faster access
         const orderMap = new Map(
           ordersData.data.map((order: Order) => [order.iddh, order])
         );
@@ -64,7 +63,6 @@ export function TableOrderDetail() {
           gamesData.data.map((game: Game) => [game.idtc, game])
         );
 
-        // Combine all data
         const combinedData = orderDetailsData.data.map((detail: any) => {
           const order = orderMap.get(detail.iddh);
           const user = order ? userMap.get(order.idnd) : null;
@@ -114,7 +112,8 @@ export function TableOrderDetail() {
       columnsData={columnsData}
       tableName="chitietdonhang"
       idField="id"
-      filterField="ID_Order"
+      filterField="userName"
+      configForm={orderDetailFormConfig}
     />
   );
 }

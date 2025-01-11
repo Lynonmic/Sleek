@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { DataTable } from "./DataTable";
+import { gameFormConfig } from "./formConfigs";
 
 export function TableGame() {
   interface Game {
@@ -73,8 +74,9 @@ export function TableGame() {
       data={games}
       columnsData={columnsData}
       tableName="trochoi"
-      idField="idtc"
+      idField="id"
       filterField="title"
+      configForm={gameFormConfig}
     />
   );
 }

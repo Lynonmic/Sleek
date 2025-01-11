@@ -5,9 +5,11 @@ import {
   Home,
   Inbox,
   Search,
-  Settings,
   ChevronDown,
   Menu,
+  LogOutIcon,
+  Wind,
+  ListOrderedIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -27,7 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { TopElement } from "../../app/admin/function/UserManagerment";
 import { TableUser } from "../../app/admin/function/TableUser";
 import { TableGame } from "../../app/admin/function/TableGame";
 import { TableType } from "../../app/admin/function/TableGameType";
@@ -58,7 +59,6 @@ const items = [
     title: "Game type",
     component: (
       <div className="w-full max-w-full">
-        <TopElement className="w-full" />
         <TableType />
       </div>
     ),
@@ -68,36 +68,29 @@ const items = [
     title: "Order",
     component: (
       <div className="w-full max-w-full">
-        <TopElement className="w-full" />
         <TableOrder />
       </div>
     ),
-    icon: Search,
+    icon: ListOrderedIcon,
   },
   {
     title: "Order detail",
     component: (
       <div className="w-full max-w-full">
-        <TopElement className="w-full" />
         <TableOrderDetail />
       </div>
     ),
-    icon: Search,
+    icon: Wind,
   },
+
   {
-    title: "Invoices",
-    component: <div>Search Content</div>,
-    icon: Search,
-  },
-  {
-    title: "FAQ",
-    component: <div>Search Content</div>,
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    component: <div>Settings Content</div>,
-    icon: Settings,
+    title: "Logout",
+    component: <></>,
+    icon: LogOutIcon,
+    onclick: () => {
+      window.location.replace("http://localhost:3000");
+      window.location.reload();
+    },
   },
 ];
 
@@ -148,7 +141,13 @@ export function DashBoard() {
                     asChild
                     isActive={activeTab === item.title}
                     className=" hover:bg-primary-300 dark:hover:bg-primary-400"
-                    onClick={() => setActiveTab(item.title)}
+                    onClick={() => {
+                      if (item.title === "Logout") {
+                        window.location.replace("http://localhost:3000");
+                      } else {
+                        setActiveTab(item.title);
+                      }
+                    }}
                   >
                     <div className="flex items-center">
                       <item.icon />

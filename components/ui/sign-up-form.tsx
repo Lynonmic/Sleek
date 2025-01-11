@@ -8,6 +8,7 @@ import {
   IconBrandGoogle,
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
+import CryptoJS from "crypto-js";
 
 export function SignupForm({
   className,
@@ -30,6 +31,9 @@ export function SignupForm({
     username: "",
     email: "",
     password: "",
+    passwordConfirm: "",
+    phoneNumber: "",
+    role: "khachhang",
   });
 
   useEffect(() => {
@@ -46,43 +50,70 @@ export function SignupForm({
       })
       .catch((error) => console.error("Error fetching user data:", error));
   }, []);
+  const handleLoginSuccess = () => {
+    localStorage.setItem("isLoggedIn", "true");
+    window.location.replace("/admin");
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSignUp) {
+      const emailExists = users.some((user) => user.email === formData.email);
+      if (emailExists) {
+        alert(
+          "This email is already registered. Please use a different email."
+        );
+        return;
+      }
+
+      if (formData.password !== formData.passwordConfirm) {
+        alert("Passwords do not match! Please check and try again.");
+        return;
+      }
+      if (formData.password.length < 6) {
+        alert("Password must be at least 6 characters long!");
+        return;
+      }
       try {
-        console.log(formData);
+        const hashedPassword = CryptoJS.SHA256(formData.password).toString();
+        const signupData = {
+          ...formData,
+
+          password: hashedPassword,
+        };
+
         const res = await fetch("http://localhost:8000/nguoidung", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(signupData),
         });
         if (!res.ok) throw new Error("Failed to sign up");
         const data = await res.json();
         console.log("User signed up:", data);
-        window.location.href = "/";
+        window.location.href = "http://localhost:3000/";
       } catch (err) {
         console.error("Error signing up:", err);
       }
     } else {
+      const hashedPassword = CryptoJS.SHA256(formData.password).toString();
       const user = users.find(
-        (user) => user.email === formData.email && user.vaitro === "admin"
+        (user) => user.email === formData.email && user.vaitro === "admin" 
       );
       if (user) {
         setLoggedInUser(user.tennguoidung);
-        window.location.href = "/admin";
+        handleLoginSuccess();
       } else {
         const user = users.find(
           (user) =>
             user.email === formData.email &&
-            user.mk === formData.password &&
+            user.mk === hashedPassword &&
             user.vaitro === "khachhang"
         );
         if (user) {
           setLoggedInUser(user.tennguoidung);
-          window.location.href = "/main";
+          window.location.replace("http://localhost:3000/");
         } else {
           alert("Invalid email or password");
         }
@@ -150,6 +181,33 @@ export function SignupForm({
             required
           />
         </LabelInputContainer>
+        {isSignUp && (
+          <LabelInputContainer>
+            <Label htmlFor="passwordConfirm">Confirm password</Label>
+            <Input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              value={formData.passwordConfirm}
+              onChange={handleChange}
+              required
+            />
+          </LabelInputContainer>
+        )}
+        {isSignUp && (
+          <LabelInputContainer>
+            <Label htmlFor="phoneNumber">Phone number</Label>
+            <Input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </LabelInputContainer>
+        )}
+
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
